@@ -1,0 +1,71 @@
+body {
+    background-color: #151516;
+    color: #37c6c6;
+    font-family: Vaccine;
+}
+.glav {
+    margin: auto;
+    width: 50%;
+    overflow: hidden;
+}
+.glav1 {
+    margin: auto;
+    width: 50%;
+    overflow: hidden;
+}
+#big_timer {
+    margin: auto;
+    width: 20%;
+    overflow: hidden;
+    font-size: 100pt;
+    text-align: center;
+}
+#go {
+    width: 100%;
+    margin: auto;
+    height: 50px;
+    border: 1px solid #37c6c6;
+    overflow: hidden;
+}
+.statys {
+    width: 0%;
+    overflow: hidden;
+    height: 100%;
+    background-color: #37c6c6;
+
+}
+input {
+    background-color: #151516;
+    border: 1px solid #37c6c6;
+    color: #2bdbdb;
+    width: 95%;
+    padding: 2%;
+    font-size: 16pt;
+    border-radius: 15px;
+    outline:none;
+    color: #fbfbfb;
+}
+input:focus {
+    border: 1px solid #ffffff;
+}
+
+#start {
+    background-color: #37c6c6;
+    color: #fbfbfb;
+    width: 25%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 15px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+.dell {
+    color: red;
+    width: 50%;
+}
+.new {
+    text-align: right;
+    overflow: hidden;
+    color: #fbfbfb;
+    width: 50%;
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-1.12.0.js" type="text/javascript"></script>
+    <script src="jquery.cookie.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            console.log($.cookie('arr'));
+            var i = 0
+            var click = 0
+            var bool = false;
+            var timer = 0;
+            var timer2 = 0;
+            var width = 0;
+            $('#big_timer').hide()
+            $('.game').hide()
+            $('.glav1').hide()
+
+            $('#start').click(async () => {
+                var arr = [];
+                var JsonForCocie = { }
+                $('.glav').hide()
+                console.log('click start');
+                await new Promise((resolve, reject) => {
+                        $('#big_timer').show()
+                        var i = 5;
+                        $('#big_timer').text(i)
+                        var tim = setInterval(function () {
+                            if (i == 0) {
+                                clearInterval(tim)
+                                $('#big_timer').hide()
+                                return resolve();
+                            }
+                            i--;
+                            $('#big_timer').text(i)
+                        }, 1000);
+                });
+
+                //--------------------------------
+                const stages = Number($('#stages').val());
+                const sek = Number($('#sec').val());
+                const sek_2 = $('#sec_2').val()
+                const name =$('#name').val()
+                JsonForCocie.name = name;
+                JsonForCocie.points = []
+                //--------------------------------
+                $('.game').show()
+                for (let j = 0; j < stages; j++) {
+                    $('.p').html(`Этап: <span style="font-size: 16pt; color:#fbfbfb">${j + 1}</span>`)
+                    $('#etap').html("Этап номер " + j)
+                    click = 0
+
+                    bool = true;
+                    timer = sek
+                    timer2 = sek_2
+                    var timerId = await new Promise((resolve, reject) => {
+                        $('#tymer').html(`Время: <span style="font-size: 20pt; color:#fbfbfb">${timer}</span>`);
+                        timer--;
+                        var tim = setInterval(() => {
+                            if (timer == 0) {
+                                bool = false;
+                                arr.push(click);
+                                clearInterval(tim)
+                                console.log(click);
+                                resolve();
+                            } else {
+                                $('#tymer').html(`Время: <span style="font-size: 20pt; color:#fbfbfb">${timer}</span>`);
+                                timer--;
+                            }
+                        }, 1000);
+                    });
+                    if (timer2 <= 0) {
+                        continue
+                    }
+                    var timerId2 = await new Promise((resolve, reject) => {
+                        $('#tymer').html(`Время (Перерыв): <span style="font-size: 20pt; color:#fbfbfb">${timer2}</span>`)
+                        timer2--;
+                        var tim = setInterval(() => {
+                            if (timer2 <= 0) {
+                                clearInterval(tim);
+                                resolve();
+                            } else {
+                                $('#tymer').html(`Время (Перерыв): <span style="font-size: 20pt; color:#fbfbfb">${timer2}</span>`)
+                                timer2--;
+                            }
+                        }, 1000);
+                    });
+                }
+                $('.game').hide();
+                $('.glav1').html(`
+                    <div style="width:50%; margin:auto; font-size: 18pt; font-weight: 900; color: #ffffff; text-align: center; margin-bottom: 15px;text-decoration:underline">${name}</div>
+                    <table style="width:50%; margin:auto; font-size: 16pt; font-weight: 900; color: #ffffff; text-align:left; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;padding-left:10px">№</th>
+                            <th style="width: 50%; padding-left:10px">Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+
+                    </tbody>
+                </table>
+                <a href="" style="color: #fbfbfb;">Новое тестирование</a>
+                    `)
+                for (var i in arr) {
+                    JsonForCocie.points.push(arr[i])
+                    str = `<tr style="background-color: #65a9aa;">
+                        <td style="padding-left:10px">#${Number(i) + 1}</td>
+                        <td style="padding-left:10px">${arr[i]}</td>
+                    </tr>`;
+                    $('#tbody').append(str)
+                }
+                JsonForCocie.sum = arr.reduce((a, b) => a + b, 0)
+                $('#tbody').append(`<tr style="background-color: #9e5d61;">
+                    <td style="padding-left:10px">Итог</td>
+                    <td style="padding-left:10px">${arr.reduce((a, b) => a + b, 0)}</td>
+                </tr>`)
+                $('.glav1').show(200)
+                console.log(JsonForCocie);
+                if ($.cookie('arr')) {
+                    let Cooci_arr = JSON.parse($.cookie('arr'));
+                    Cooci_arr.push(JsonForCocie)
+                    let str = JSON.stringify(Cooci_arr)
+                    $.cookie('arr', str, { path: '/'})
+                } else {
+                    let str = '['
+                    str += JSON.stringify(JsonForCocie)
+                    str += ']'
+                    $.cookie('arr', str, { path: '/'})
+                    console.log('no');
+                }
+            })
+
+            $('html').keyup(() => {
+                if (bool) {
+                    click++;
+                    width += 0.5
+                    $('.statys').css('width', width + '%')
+                }
+            })
+            $('.dell').click( () => {
+                console.log('jr');
+                alert('Таблица результатов очищена')
+                $.cookie('arr', '', { path: '/'})
+            })
+        });
+    </script>
+</head>
+<body>
+    <div class="glav1">
+
+    </div>
+    <div class="glav">
+        <a class="dell">Очистить таблицу результатов</a>
+        <p><div>ФИО</div><input type="text" name="" value="" id="name"></p>
+        <p><div>Количество этапов</div><input type="text" name="" value="" id="stages"></p>
+        <p><div>Секунд на этап</div><input type="text" name="" value="" id="sec"></p>
+        <p><div>Секунд на перерыв</div><input type="text" name="" value="" id="sec_2"></p>
+        <a href="Table.html" class="new">Перейти к результатам</a>
+        <h3 id="start">Старт</h3>
+    </div>
+    <div id="big_timer">5</div>
+    <div class="game" style="width: 50%; margin:auto">
+        <p class="p">Этап: <span style="font-size: 20pt; color:#fbfbfb"></span></p>
+        <p id="tymer">Время: <span style="font-size: 20pt; color:#fbfbfb"></span></p>
+        <div id="go"><div class="statys"></div></div>
+    </div>
+</body>
+</html>
